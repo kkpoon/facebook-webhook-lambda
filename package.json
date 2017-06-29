@@ -1,0 +1,50 @@
+{
+    "name": "facebook-webhook-lambda",
+    "version": "1.0.0",
+    "description": "facebook webhook on AWS Lambda",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "jest",
+        "prepublish": "tsc",
+        "deploy:lambda": "gulp deploy:lambda"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kkpoon/facebook-webhook-lambda.git"
+    },
+    "author": "kkpoon <noopkk@gmail.com>",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/kkpoon/facebook-webhook-lambda/issues"
+    },
+    "homepage": "https://github.com/kkpoon/facebook-webhook-lambda#readme",
+    "dependencies": {
+        "@types/aws-lambda": "^0.0.14",
+        "@types/node": "^8.0.6"
+    },
+    "devDependencies": {
+        "del": "^3.0.0",
+        "gulp": "^3.9.1",
+        "gulp-awslambda": "^0.4.0",
+        "gulp-install": "^1.1.0",
+        "gulp-typescript": "^3.1.7",
+        "gulp-zip": "^4.0.0",
+        "jest": "^20.0.4",
+        "run-sequence": "^1.2.2",
+        "ts-jest": "^20.0.6",
+        "typescript": "^2.4.1"
+    },
+    "jest": {
+        "transform": {
+            "^.+\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+        },
+        "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
+        "moduleFileExtensions": [
+            "ts",
+            "js",
+            "json"
+        ]
+    }
+}

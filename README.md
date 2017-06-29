@@ -1,2 +1,3 @@
-# facebook-webhook
-facebook webhook in AWS Lambda
+# facebook-webhook-lambda
+
+facebook webhook on AWS Lambda
