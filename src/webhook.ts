@@ -15,7 +15,7 @@
  */
 
 import { APIGatewayEvent, Context, ProxyCallback } from "aws-lambda";
-import { SignatureVerifier, VerificationRequestHandler } from "./verifier";
+import { SignatureVerifier, TokenVerifier } from "./verifier";
 
 export interface WebhookHandlerOptions {
     appSecret: string;
@@ -24,33 +24,27 @@ export interface WebhookHandlerOptions {
 }
 
 export const WebhookRequestHandler = (options: WebhookHandlerOptions) => {
-    const verifySignature =
-        SignatureVerifier(options.appSecret);
-    const handleVerificationRequest =
-        VerificationRequestHandler(options.verifyToken);
-    const handleWebhookUpdateRequest =
-        options.updateHandler;
+    const verifySignature = SignatureVerifier(options.appSecret);
+    const verityToken = TokenVerifier(options.verifyToken);
+    const handleUpdate = options.updateHandler;
 
     return (event: APIGatewayEvent, context: Context, callback: ProxyCallback) => {
         const { body, httpMethod, headers, queryStringParameters } = event;
         const signature = headers["X-Hub-Signature"];
-        const processRequest = (() => {
+        const handleRequest = (() => {
             switch (httpMethod) {
                 case "GET":
-                    return handleVerificationRequest({
-                        mode: queryStringParameters["hub.mode"],
-                        challenge: queryStringParameters["hub.challenge"],
-                        verify_token: queryStringParameters["hub.verify_token"]
-                    });
+                    return verityToken(queryStringParameters["hub.verify_token"])
+                        .then(() => queryStringParameters["hub.challenge"]);
                 case "POST":
                     return verifySignature(signature)(body)
-                        .then(() => handleWebhookUpdateRequest(body));
+                        .then(() => handleUpdate(body));
                 default:
                     return Promise.reject("unknown request");
             }
         })();
 
-        return processRequest.then(
+        return handleRequest.then(
             (resBody) => callback(null, { statusCode: 200, body: resBody }),
             (err) => {
                 console.error("ERROR: " + err);

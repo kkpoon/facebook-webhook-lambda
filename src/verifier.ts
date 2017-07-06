@@ -38,15 +38,9 @@ export const SignatureVerifier =
             return resolve();
         });
 
-export interface VerificationData {
-    mode: string;
-    challenge: string;
-    verify_token: string;
-}
-
-export const VerificationRequestHandler =
+export const TokenVerifier =
     (expectedVerifyToken: string) =>
-        (data: VerificationData) =>
-            expectedVerifyToken === data.verify_token ?
-                Promise.resolve(data.challenge)
+        (verifyToken: string) =>
+            expectedVerifyToken === verifyToken ?
+                Promise.resolve()
                 : Promise.reject("invalid verify token");
