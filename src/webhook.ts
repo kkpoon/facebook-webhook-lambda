@@ -38,7 +38,7 @@ export const WebhookRequestHandler = (options: WebhookHandlerOptions) => {
                         .then(() => queryStringParameters["hub.challenge"]);
                 case "POST":
                     return verifySignature(signature)(body)
-                        .then(() => handleUpdate(body));
+                        .then(() => handleUpdate(JSON.parse(body)));
                 default:
                     return Promise.reject("unknown request");
             }
